@@ -1,0 +1,32 @@
+
+   <!-- Fixed navbar -->
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">I-ReadPaper 簡單幫您閱讀外文文章</a>
+        </div>    
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li>  
+              <form accept-charset="UTF-8" action="/" class="navbar-form navbar-left" method="get">
+                <div class="form-group">
+                  <input type="text" name="paper" class="form-control" value="" placeholder="文章網址 例如:http://..." />
+                </div>
+                <button type="submit" class="btn btn-default">開始閱讀</button>
+              </form>    
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <%= @processed_paper.to_s.force_encoding("UTF-8") %>  
+    </div> 
+
