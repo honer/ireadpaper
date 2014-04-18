@@ -30,9 +30,7 @@ class IreadpaperController < ApplicationController
 
     # text to words
     words = text_to_words(page.content)
-
     new_page_content = mask_tranlate_word(page.to_html,words)
-
 	  @processed_paper = new_page_content.html_safe
   end
 
@@ -42,53 +40,36 @@ class IreadpaperController < ApplicationController
 
   def mask_tranlate_word(page, words)
     words.each do |word|
-      tw_word = get_en_to_tw_tranlate(word)
+      tw_word = en_to_tw_tranlate(word)
       page.sub! word, "#{word}{#{tw_word}}"
     end
-
-    return page
+    page
   end
 
-  def get_en_to_tw_tranlate(en_word)
-
-    word = get_local_translare("en", "zh_tw", en_word.downcase)
-
+  def en_to_tw_tranlate(en_word)
+    word = local_translare("en", "zh_tw", en_word.downcase)
     if word == nil
-      word = get_google_translate("en", "zh-TW", en_word)
-
+      word = google_translate("en", "zh-TW", en_word)
       write_translate_to_local("en", "zhtw", en_word.downcase, word)
     end
-
     word
   end
 
   def write_translate_to_local(source, target, source_word, target_word)
     Dictionary.create( :en => source_word, :zhtw => target_word)
-
   end
 
-  def get_local_translare(source, target, q)
-
+  def local_translare(source, target, q)
     dictionary = Dictionary.where( "en = ?", q).first
-
-    return dictionary.zhtw if dictionary != nil
-
+    dictionary.zhtw if dictionary
   end
 
-  def get_google_translate(source, target, q)
-  
+  def google_translate(source, target, q)
     url = "https://www.googleapis.com/language/translate/v2?key=#{@@google_apikey}&q=#{q}&source=#{source}&target=#{target}"
-
-    w = get_page_content(url)
-
-    Rails.logger.info w
-
-    hash = JSON.parse w
-
-    word = hash["data"]["translations"][0]["translatedText"] if hash.present?
-
-    return word
-  
+    result = get_page_content(url)
+    Rails.logger.info result
+    result_json = JSON.parse result
+    word = result_json["data"]["translations"][0]["translatedText"] if result_json.present?
   end
 
 
@@ -98,22 +79,16 @@ class IreadpaperController < ApplicationController
   end
   
   def get_unique_words(words)
-    unique_words = Array.new
-
+    unique_words = []
     words.each do |word|
-      if !unique_words.include? word
-        if /[a-zA-Z]/.match(word)
-          unique_words << word
-        end
-      end
+      unique_words << word if /[a-zA-Z]/.match(word) and !unique_words.include? word
     end  
-
-    return unique_words
+    unique_words
   end
 
   def get_url_host_name(url)
     myUri = URI.parse(url)
-    return myUri.host
+    myUri.host
   end
 
   def get_page_content(url)
