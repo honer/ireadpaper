@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.0.2'
+gem 'rails', '4.1'
 
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3'
@@ -18,6 +18,12 @@ gem 'therubyracer', :platforms => :ruby
 gem 'coffee-rails', '~> 4.0.0'
 
 gem 'twitter-bootstrap-rails'
+
+gem 'sanitize'
+
+gem 'nokogiri'
+
+gem 'mysql2'
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
